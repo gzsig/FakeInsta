@@ -8,48 +8,36 @@ import {
   Image,
   Dimensions
 } from "react-native";
+import Post from "../post";
 const width = Dimensions.get("screen").width;
 
 export default class Feed extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      photos: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("https://instalura-api.herokuapp.com/api/public/fotos/rafael")
+      .then(answer => answer.json())
+      .then(json => this.setState({ photos: json }));
+  }
+
   render() {
-    const photos = [
-      { id: 1, user: "Gabriel" },
-      { id: 2, user: "Fernanda" },
-      { id: 3, user: "Bruno" }
-    ];
     return (
       <FlatList
         style={styles.container}
         keyExtractor={item => item.id.toString()}
-        data={photos}
-        renderItem={({ item }) => (
-          <View>
-            <View style={styles.header}>
-              <Image
-                source={require("../../../resources/img/gabe.jpg")}
-                style={styles.profilePic}
-              />
-              <Text>{item.user}</Text>
-            </View>
-            <Image
-              source={require("../../../resources/img/gabe.jpg")}
-              style={styles.post}
-            />
-          </View>
-        )}
+        data={this.state.photos}
+        renderItem={({ item }) => <Post photo={item} />}
       />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: { marginTop: 35 },
-  header: { flexDirection: "row", alignItems: "center", margin: 10 },
-  profilePic: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10
-  },
-  post: { width: width, height: width }
+  container: { marginTop: 35 }
 });
