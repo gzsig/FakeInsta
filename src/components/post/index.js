@@ -7,7 +7,8 @@ import {
   FlatList,
   Image,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from "react-native";
 const width = Dimensions.get("screen").width;
 
@@ -16,7 +17,8 @@ export default class Post extends Component {
     super(props);
 
     this.state = {
-      photo: this.props.photo
+      photo: this.props.photo,
+      commentContent: ""
     };
   }
 
@@ -63,6 +65,25 @@ export default class Post extends Component {
     return <Text>{photo.comentario}</Text>;
   };
 
+  newComment = () => {
+    const allComments = [
+      ...this.state.photo.comentarios,
+      {
+        id: this.state.commentContent,
+        login: "gzsig",
+        texto: this.state.commentContent
+      }
+    ];
+
+    const updatePhoto = {
+      ...this.state.photo,
+      comentarios: allComments
+    };
+
+    this.setState({ photo: updatePhoto });
+    this.inputValue.clear();
+  };
+
   render() {
     const { photo } = this.state;
     return (
@@ -84,12 +105,29 @@ export default class Post extends Component {
           </TouchableOpacity>
           {this.showLikes(photo.likers)}
           {this.showComments(photo)}
+
           {photo.comentarios.map(comment => (
             <View style={styles.comment} key={comment.id}>
-              <Text style={{fontWeight:'bold', marginRight: 5}} >{comment.login}</Text>
+              <Text style={{ fontWeight: "bold", marginRight: 5 }}>
+                {comment.login}
+              </Text>
               <Text>{comment.texto}</Text>
             </View>
           ))}
+          <View style={styles.newComment}>
+            <TextInput
+              style={styles.input}
+              placeholder="Add a comment..."
+              ref={input => (this.inputValue = input)}
+              onChangeText={text => this.setState({ commentContent: text })}
+            />
+            <TouchableOpacity onPress={this.newComment.bind(this)}>
+              <Image
+                source={require("../../../resources/img/submit.png")}
+                style={styles.submit}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -118,6 +156,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   comment: {
-    flexDirection: 'row'
+    flexDirection: "row"
+  },
+  input: {
+    height: 40,
+    flex: 1
+  },
+  submit: {
+    height: 20,
+    width: 20
+  },
+  newComment: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "grey"
   }
 });
