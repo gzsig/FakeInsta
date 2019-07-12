@@ -8,7 +8,7 @@ import {
   Image,
   Dimensions
 } from "react-native";
-import Post from "../post";
+import Post from "../Post";
 const width = Dimensions.get("screen").width;
 
 export default class Feed extends Component {

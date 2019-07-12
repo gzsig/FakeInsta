@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   TextInput
 } from "react-native";
-import AddComment from "../addComment";
+import AddComment from "../AddComment";
 const width = Dimensions.get("screen").width;
 
 export default class Post extends Component {

@@ -7,7 +7,7 @@
  */
 
 import React, { Fragment } from "react";
-import Feed from "./src/components/feed";
+import Feed from "./src/components/Feed";
 
 
 const App = () => {
