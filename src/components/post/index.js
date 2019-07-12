@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TextInput
 } from "react-native";
+import AddComment from "../addComment";
 const width = Dimensions.get("screen").width;
 
 export default class Post extends Component {
@@ -17,8 +18,7 @@ export default class Post extends Component {
     super(props);
 
     this.state = {
-      photo: this.props.photo,
-      commentContent: ""
+      photo: this.props.photo
     };
   }
 
@@ -65,13 +65,15 @@ export default class Post extends Component {
     return <Text>{photo.comentario}</Text>;
   };
 
-  newComment = () => {
+  newComment = (commentContent, inputValue) => {
+    if (commentContent === "") return;
+
     const allComments = [
       ...this.state.photo.comentarios,
       {
-        id: this.state.commentContent,
+        id: commentContent,
         login: "gzsig",
-        texto: this.state.commentContent
+        texto: commentContent
       }
     ];
 
@@ -81,7 +83,7 @@ export default class Post extends Component {
     };
 
     this.setState({ photo: updatePhoto });
-    this.inputValue.clear();
+    inputValue.clear();
   };
 
   render() {
@@ -114,20 +116,7 @@ export default class Post extends Component {
               <Text>{comment.texto}</Text>
             </View>
           ))}
-          <View style={styles.newComment}>
-            <TextInput
-              style={styles.input}
-              placeholder="Add a comment..."
-              ref={input => (this.inputValue = input)}
-              onChangeText={text => this.setState({ commentContent: text })}
-            />
-            <TouchableOpacity onPress={this.newComment.bind(this)}>
-              <Image
-                source={require("../../../resources/img/submit.png")}
-                style={styles.submit}
-              />
-            </TouchableOpacity>
-          </View>
+          <AddComment callBack={this.newComment.bind(this)} />
         </View>
       </View>
     );
@@ -157,19 +146,5 @@ const styles = StyleSheet.create({
   },
   comment: {
     flexDirection: "row"
-  },
-  input: {
-    height: 40,
-    flex: 1
-  },
-  submit: {
-    height: 20,
-    width: 20
-  },
-  newComment: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "grey"
   }
 });
