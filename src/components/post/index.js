@@ -15,37 +15,6 @@ import Likes from "../Likes";
 const width = Dimensions.get("screen").width;
 
 export default class Post extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      photo: this.props.photo
-    };
-  }
-
-
-
-  like = () => {
-    const { photo } = this.state;
-
-    let allLikes = [];
-
-    if (!photo.likeada) {
-      allLikes = photo.likers.concat({ login: "gzsig" });
-    } else {
-      allLikes = allLikes = photo.likers.filter(liker => {
-        return liker.login != "gzsig";
-      });
-    }
-
-    const likeState = {
-      ...photo,
-      likeada: !photo.likeada,
-      likers: allLikes
-    };
-    this.setState({ photo: likeState });
-  };
-
 
 
   showComments = photo => {
@@ -54,29 +23,8 @@ export default class Post extends Component {
     return <Text>{photo.comentario}</Text>;
   };
 
-  newComment = (commentContent, inputValue) => {
-    if (commentContent === "") return;
-
-    const allComments = [
-      ...this.state.photo.comentarios,
-      {
-        id: commentContent,
-        login: "gzsig",
-        texto: commentContent
-      }
-    ];
-
-    const updatePhoto = {
-      ...this.state.photo,
-      comentarios: allComments
-    };
-
-    this.setState({ photo: updatePhoto });
-    inputValue.clear();
-  };
-
   render() {
-    const { photo } = this.state;
+    const { like, photo, comment } = this.props;
     return (
       <View>
         <View style={styles.header}>
@@ -85,7 +33,7 @@ export default class Post extends Component {
         </View>
         <Image source={{ uri: photo.urlFoto }} style={styles.post} />
         <View style={styles.imageFooter}>
-<Likes like = {this.like.bind(this)}  photo = {photo}/>
+          <Likes photo={photo} like={like} />
           {this.showComments(photo)}
 
           {photo.comentarios.map(comment => (
@@ -96,7 +44,7 @@ export default class Post extends Component {
               <Text>{comment.texto}</Text>
             </View>
           ))}
-          <AddComment callBack={this.newComment.bind(this)} />
+          <AddComment callBack={comment} idPhoto={photo.id}/>
         </View>
       </View>
     );

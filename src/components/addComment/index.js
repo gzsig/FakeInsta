@@ -28,8 +28,9 @@ export default class AddComment extends Component {
         <TouchableOpacity
           onPress={() => {
             this.props.callBack(
+              this.props.idPhoto,
               this.state.commentContent,
-              this.inputValue
+              this.inputValue,
             );
             this.setState({ commentContent: "" });
           }}
